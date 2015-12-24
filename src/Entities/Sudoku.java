@@ -8,14 +8,14 @@ package Entities;
 
 //Singleton classs
 public class Sudoku {
-    private int size = 9;
-    int matrix[][];
+    //Static vars
+    public static int size = 9;
+    public static final int empty = -1; //Indicator of empty position
+
+    //Instance vars    
+    public int matrix[][];
+    private static Sudoku instance = null; //singleton instance
     
-    private static Sudoku instance = null;
-    
-    public int getSize(){
-        return this.size;
-    }
     
     public void setSize(int size){
         this.size = size;
