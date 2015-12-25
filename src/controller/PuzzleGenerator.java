@@ -1,7 +1,7 @@
 
 package controller;
 
-import Entities.Sudoku;
+import entities.Sudoku;
 
 /**
  *

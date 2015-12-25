@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Entities;
+package entities;
 
 /**
  *
@@ -23,6 +23,6 @@ public class Position {
     public Position(int row, int col){
         this.row = row;
         this.col = col;
-        this.val = Sudoku.EMPTY;
+        this.val = Sudoku.empty;
     }
 }

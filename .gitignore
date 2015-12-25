@@ -1,3 +1,4 @@
+*.txt
 build/
 nbproject/
 manifest.mf

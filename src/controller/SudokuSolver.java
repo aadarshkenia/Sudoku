@@ -5,8 +5,8 @@
  */
 package controller;
 
-import Entities.Sudoku;
-import Entities.Position;
+import entities.Sudoku;
+import entities.Position;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -21,11 +21,20 @@ import java.util.List;
  */
 public class SudokuSolver {
     
+    //TESTING
+    public static void main(String args[]){
+        Sudoku sudoku = Sudoku.getInstance();
+        initFromFile(sudoku, "input.txt");
+        solver(sudoku);
+        writeOutput(sudoku);
+    }
+    
     //Naive backtracking solution
     public static void solver(Sudoku sudoku){
        
         List<Position> emptyPositions = findEmptyPositions(sudoku);
-        solverHelper(sudoku.matrix, emptyPositions, 0);       
+        boolean ans = solverHelper(sudoku.matrix, emptyPositions, 0);       
+        System.out.println("Ans from solverHelper(): "+ans);
     }
     
     private static void initFromFile(Sudoku sudoku, String filename){
@@ -49,20 +58,25 @@ public class SudokuSolver {
     }
     
     private static void writeOutput(Sudoku sudoku){
+        PrintWriter writer = null;
         try{
-            PrintWriter writer = new PrintWriter("output.txt");
+            writer = new PrintWriter("output.txt");
             int size = Sudoku.size;
             for(int i=0; i < size; i++){
                 StringBuilder row = new StringBuilder();
                 for(int j=0; j < size; j++){
                     row.append(sudoku.matrix[i][j]+" ");
                 }
-                writer.println(row.toString()+"\n");
+                writer.println(row.toString());
             }            
         }
         catch(IOException e){
             System.out.println(e.getMessage());
             e.printStackTrace();            
+        }
+        finally{
+            if(writer != null)
+                writer.close();
         }
     }
     
