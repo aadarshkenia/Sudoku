@@ -30,11 +30,16 @@ public class SudokuSolver {
     }
     
     //Naive backtracking solution
-    public static void solver(Sudoku sudoku){
-       
-        List<Position> emptyPositions = findEmptyPositions(sudoku);
+    public static void solver(Sudoku sudoku){       
+        List<Position> emptyPositions = findEmptyPositions(sudoku.matrix);
         boolean ans = solverHelper(sudoku.matrix, emptyPositions, 0);       
-        System.out.println("Ans from solverHelper(): "+ans);
+        System.out.println("Solution possible: "+ans);
+    }
+    
+    //Counts number of solutions for a given sudoku matrix
+    public static int solutionCounter(int[][] matrix){
+        List<Position> emptyPositions = findEmptyPositions(matrix);
+        return solutionCounterHelper(matrix, emptyPositions, 0);
     }
     
     private static void initFromFile(Sudoku sudoku, String filename){
@@ -80,7 +85,8 @@ public class SudokuSolver {
         }
     }
     
-    private static boolean solverHelper(int matrix[][], List<Position> emptyPositions, int index){
+    //Returns the number of possible solutions
+    public static boolean solverHelper(int matrix[][], List<Position> emptyPositions, int index){
         int size = Sudoku.size;
         int emptyVal = Sudoku.empty;
         
@@ -88,11 +94,9 @@ public class SudokuSolver {
         int cur_row = cur_pos.row;
         int cur_col = cur_pos.col;
         
-        for(int i=1; i <= size; i++){
-            if(Validator.validateRow(matrix, size, cur_row, cur_col, i)
-               && Validator.validateColumn(matrix, size, cur_row, cur_col, i)
-               && Validator.validateBlock(matrix, size, cur_row, cur_col, i)){
-               
+        int numSolutions = 0;
+        for(int i=1; i <= size; i++){            
+            if(Validator.validateAll(matrix, size, cur_row, cur_col, i)){   
                 matrix[cur_row][cur_col] = i;               
                 if(index == emptyPositions.size()-1)
                     return true;                
@@ -105,14 +109,43 @@ public class SudokuSolver {
         return false;
     }
     
-    private static List<Position> findEmptyPositions(Sudoku sudoku){
+    //Alternate solverHelper returning count of possible solutions
+    private static int solutionCounterHelper(int matrix[][], List<Position> emptyPositions, int index){
+        //System.out.println("ES index: "+index);
+        int size = Sudoku.size;
+        int emptyVal = Sudoku.empty;
+        
+        Position cur_pos = emptyPositions.get(index);
+        int cur_row = cur_pos.row;
+        int cur_col = cur_pos.col;
+        
+        int numSolutions = 0;
+        for(int i=1; i <= size; i++){            
+            if(Validator.validateAll(matrix, size, cur_row, cur_col, i)){   
+                matrix[cur_row][cur_col] = i;               
+                if(index == emptyPositions.size()-1)
+                    return 1;            
+                int subSolutions = solutionCounterHelper(matrix, emptyPositions, index+1);
+                //System.out.println("SS: "+subSolutions);
+                if(subSolutions >= 1)
+                    numSolutions += subSolutions;
+                
+                matrix[cur_row][cur_col] = emptyVal;
+            }
+        }
+        //System.out.println("NS: "+numSolutions);
+        return numSolutions;
+    }
+    
+    
+    private static List<Position> findEmptyPositions(int[][] matrix){
         int size = Sudoku.size;
         int emptyVal = Sudoku.empty;
         ArrayList<Position> ans = new ArrayList<Position>();
         
         for(int i=0; i < size; i++){
             for(int j=0; j < size; j++){
-                if(sudoku.matrix[i][j] == emptyVal)
+                if(matrix[i][j] == emptyVal)
                     ans.add(new Position(i, j));
             }
         }

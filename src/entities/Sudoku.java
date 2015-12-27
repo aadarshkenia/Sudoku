@@ -25,6 +25,11 @@ public class Sudoku {
     
     private Sudoku(){
         matrix = new int[size][size];
+        //Initializing all cells to empty
+        for(int i = 0; i < size; i++)
+            for(int j = 0 ; j < size; j++)
+                matrix[i][j] = empty;
+        
     }
     
     public static Sudoku getInstance(){

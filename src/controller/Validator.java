@@ -13,7 +13,7 @@ public class Validator {
    
     public static boolean validateRow(int[][] matrix, int size, int x, int y, int val){
         for(int i=0; i < size; i++){
-            if(i!=y && matrix[x][i]==val)
+            if(i!=y && (matrix[x][i] == val))
                 return false;
         }
         return true;
@@ -21,7 +21,7 @@ public class Validator {
     
     public static boolean validateColumn(int[][] matrix, int size, int x, int y, int val){
         for(int i=0; i < size; i++){
-            if(i!=y && matrix[i][y]==val)
+            if(i!=x && (matrix[i][y] == val))
                 return false;
         }
         return true;
@@ -43,5 +43,11 @@ public class Validator {
             }
         }        
         return true;
-    }    
+    }
+    
+    public static boolean validateAll(int [][] matrix, int size, int x, int y, int val){
+        return (validateRow(matrix, size, x, y, val) 
+               && validateColumn(matrix, size, x, y, val) 
+               && validateBlock(matrix, size, x, y, val));
+    }
 }
