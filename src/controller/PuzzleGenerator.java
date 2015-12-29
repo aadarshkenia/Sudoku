@@ -14,19 +14,14 @@ public class PuzzleGenerator {
     }
     
     private static void generate(){
+        long startTime = System.currentTimeMillis();
+        
         Sudoku sudoku = Sudoku.getInstance(); //This should ideally be the place of initialization of singleton obj
         List<Position> emptyPositions = generateEmptyPositionsList(sudoku.size);
      
         
         generateHelper(sudoku.matrix, emptyPositions, 0);
-        System.out.println("Valid sudoku: ");
-        for(int i=0; i < sudoku.size; i++){
-            for(int j=0; j < sudoku.size; j++){
-                System.out.print(sudoku.matrix[i][j]+" ");
-            }
-            System.out.println();
-        }
-        
+       
         List<Position> filledPos = generateFilledPositionsList(sudoku.matrix, Sudoku.size);
         
         while(filledPos.size() > 0){
@@ -37,6 +32,7 @@ public class PuzzleGenerator {
             if(solCount > 1){
                 sudoku.matrix[randomPos.row][randomPos.col] = randomPos.val;
                 break;
+                //filledPos.remove(randomPos);
             }
             else if(solCount == 1){
                 filledPos.remove(randomPos);
@@ -46,6 +42,7 @@ public class PuzzleGenerator {
             }
         }
         
+        System.out.println(System.currentTimeMillis() - startTime);
         System.out.println("Valid puzzle: ");
         for(int i=0; i < sudoku.size; i++){
             for(int j=0; j < sudoku.size; j++){
