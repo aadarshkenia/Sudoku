@@ -14,13 +14,13 @@ public class Sudoku {
 
     //Instance vars    
     public int matrix[][];
-    private static Sudoku instance = null; //singleton instance
+    private static Sudoku instance_ = null; //singleton instance_
     
     
     public void setSize(int size){
         this.size = size;
         //Re-initiate object when size changes
-        instance = new Sudoku();
+        instance_ = new Sudoku();
     }
     
     private Sudoku(){
@@ -33,8 +33,8 @@ public class Sudoku {
     }
     
     public static Sudoku getInstance(){
-        if(instance == null)
-            instance = new Sudoku();
-        return instance;
+        if(instance_ == null)
+            instance_ = new Sudoku();
+        return instance_;
     }
 }

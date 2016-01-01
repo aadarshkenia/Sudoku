@@ -7,19 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+//SINGLETON CLASS
 public class PuzzleGenerator {
     
-    public static void main(String args[]){
-        generate();
+    private static PuzzleGenerator instance_ = null;
+    
+    public static PuzzleGenerator getInstance(){
+        if(instance_ == null){
+            instance_ = new PuzzleGenerator();
+        }
+        return instance_;
     }
     
-    private static void generate(){
+    public void generate(){
         long startTime = System.currentTimeMillis();
         
-        Sudoku sudoku = Sudoku.getInstance(); //This should ideally be the place of initialization of singleton obj
-        List<Position> emptyPositions = generateEmptyPositionsList(sudoku.size);
-     
+        Sudoku sudoku = Sudoku.getInstance(); //This should ideally be the place of initialization when running for first time
+        clearAllPositions(sudoku.matrix); //Clear old sudoku values
         
+        List<Position> emptyPositions = generateEmptyPositionsList(sudoku.size);        
         generateHelper(sudoku.matrix, emptyPositions, 0);
        
         List<Position> filledPos = generateFilledPositionsList(sudoku.matrix, Sudoku.size);
@@ -53,8 +59,8 @@ public class PuzzleGenerator {
         
     }
     
-    //Backtracking recursive function to generate a full-valid sudoku
-    private static boolean generateHelper(int[][] matrix, List<Position> emptyPos, int index){
+    //Backtracking recursive function to generate a FULL & VALID sudoku
+    private boolean generateHelper(int[][] matrix, List<Position> emptyPos, int index){
         Position currentPos = emptyPos.get(index);
         int row = currentPos.row;
         int col = currentPos.col;
@@ -76,7 +82,7 @@ public class PuzzleGenerator {
     }    
     
     
-    public static int[][] duplicateMatrix(int[][] orig){
+    private static int[][] duplicateMatrix(int[][] orig){
         int n = orig.length;
         int dup[][] = new int[n][n];
         for(int i = 0; i < n; i++)
@@ -87,7 +93,7 @@ public class PuzzleGenerator {
     
     
     //Generate position objects for all 81 positions
-    private static List<Position> generateEmptyPositionsList(int size){
+    private List<Position> generateEmptyPositionsList(int size){
         List<Position> ans = new ArrayList();
         for(int i=0; i < size; i++){
             for(int j=0; j < size; j++){
@@ -98,7 +104,7 @@ public class PuzzleGenerator {
         return ans;
     }
     
-    private static List<Position> generateFilledPositionsList(int matrix[][], int size){
+    private List<Position> generateFilledPositionsList(int matrix[][], int size){
         List<Position> ans = new ArrayList();
         int emptyVal = Sudoku.empty;
         
@@ -110,7 +116,7 @@ public class PuzzleGenerator {
     }
     
     //Returns list of possible numbers for a given position in a given sudoku
-    private static List<Integer> possibleNumbers(int[][] matrix, Position p){
+    private List<Integer> possibleNumbers(int[][] matrix, Position p){
         List<Integer> ans = new ArrayList();
         int size = Sudoku.size;
         for(int i=1; i<= size; i++){
@@ -121,7 +127,7 @@ public class PuzzleGenerator {
     }
     
     //Selects a random position from a list of positions
-    private static Position getRandomPosition(List<Position> emptyPos){
+    private Position getRandomPosition(List<Position> emptyPos){
         int emptyListSize = emptyPos.size();
        
         Random random = new Random();
@@ -129,7 +135,7 @@ public class PuzzleGenerator {
         return emptyPos.get(index);        
     }
     
-    private static int getRandomValue(List<Integer> values){
+    private int getRandomValue(List<Integer> values){
         int size = values.size();
        
         Random random = new Random();
@@ -137,5 +143,11 @@ public class PuzzleGenerator {
         return values.get(index);        
     }
     
+    private void clearAllPositions(int[][] matrix){
+        int size = Sudoku.size;
+        for(int i=0; i<size; i++)
+            for(int j=0; j<size; j++)
+                matrix[i][j] = Sudoku.empty;
+    }
     
 }
